@@ -1,55 +1,50 @@
-// Sprite sheet frame definitions — single source of truth for all asset coordinates
-// All sheets are 1448×1086px
+// Asset key constants — generated sprites live in public/assets/sprites/
+// Characters sheet was 6 cols × 2 rows (row 0: plants, row 1: zombies)
+// Effects sheet was 4 cols × 3 rows
+// Terrain sheet was 4 cols × 3 rows
 
-// characters.png — 6 cols × 2 rows, cell = 241×543
-const CW = 241, RH = 543
+// Individual sprite keys (loaded as separate images in PreloadScene)
+export const SPRITES = {
+  // Plants (characters row 0: char-1 to char-6)
+  peashooter:    { path: 'assets/sprites/characters/char-1.png' },
+  sunflower:     { path: 'assets/sprites/characters/char-2.png' },
+  wallnut:       { path: 'assets/sprites/characters/char-3.png' },
 
-// effects.png — 4 cols × 3 rows, cell = 362×362
-// terrain.png  — 4 cols × 3 rows, cell = 362×362
-const EW = 362, EH = 362
+  // Zombies (characters row 1: char-7 to char-12)
+  zombie_normal: { path: 'assets/sprites/characters/char-7.png' },
+  zombie_cone:   { path: 'assets/sprites/characters/char-8.png' },
 
+  // Projectiles (effects row 0: fx-1=pea green, fx-2=ice ball)
+  pea:           { path: 'assets/sprites/effects/fx-1.png' },
+
+  // Terrain tiles (tile-1..4: row 0, tile-5..8: row 1)
+  tile_grass:    { path: 'assets/sprites/terrain/tile-1.png' },
+  tile_flower:   { path: 'assets/sprites/terrain/tile-2.png' },
+  tile_dirt:     { path: 'assets/sprites/terrain/tile-3.png' },
+  tile_stone:    { path: 'assets/sprites/terrain/tile-4.png' },
+  tile_meadow:   { path: 'assets/sprites/terrain/tile-5.png' },
+  tile_sand:     { path: 'assets/sprites/terrain/tile-8.png' },
+}
+
+// Sprite sheet references for UI elements (loaded as full sheets, referenced by frame)
+// UI sheet still uses sheet + frame approach since layout is non-uniform
 export const SHEETS = {
-  CHARACTERS: 'characters',
-  EFFECTS:    'effects',
-  TERRAIN:    'terrain',
-  UI:         'ui',
+  UI: 'ui',
 }
 
-// Frame definitions: { sheet, x, y, w, h }
+// UI plant card frames within ui.png (top row, 6 cards each ~241×380px)
+const CUW = 241
 export const FRAMES = {
-  // Plants (characters row 0)
-  peashooter:  { sheet: 'characters', x: 0,      y: 0,  w: CW, h: RH },
-  sunflower:   { sheet: 'characters', x: CW,     y: 0,  w: CW, h: RH },
-  wallnut:     { sheet: 'characters', x: CW * 2, y: 0,  w: CW, h: RH },
-
-  // Zombies (characters row 1)
-  zombie_normal: { sheet: 'characters', x: 0,      y: RH, w: CW, h: RH },
-  zombie_cone:   { sheet: 'characters', x: CW,     y: RH, w: CW, h: RH },
-
-  // Projectiles (effects row 0)
-  pea:         { sheet: 'effects', x: 0,      y: 0,  w: EW, h: EH },
-  ice_ball:    { sheet: 'effects', x: EW,     y: 0,  w: EW, h: EH },
-
-  // Terrain tiles (terrain rows 0–1)
-  tile_grass:  { sheet: 'terrain', x: 0,      y: 0,       w: EW, h: EH },
-  tile_flower: { sheet: 'terrain', x: EW,     y: 0,       w: EW, h: EH },
-  tile_dirt:   { sheet: 'terrain', x: EW * 2, y: 0,       w: EW, h: EH },
-  tile_stone:  { sheet: 'terrain', x: EW * 3, y: 0,       w: EW, h: EH },
-  tile_meadow: { sheet: 'terrain', x: 0,      y: EH,      w: EW, h: EH },
-  tile_sand:   { sheet: 'terrain', x: EW * 3, y: EH,      w: EW, h: EH },
-
-  // UI — plant card frames (top row, 6 cards each ~241×400)
-  card_green:  { sheet: 'ui', x: 0,      y: 0, w: 241, h: 380 },
-  card_gold:   { sheet: 'ui', x: 241,    y: 0, w: 241, h: 380 },
-  card_brown:  { sheet: 'ui', x: 482,    y: 0, w: 241, h: 380 },
-  card_blue:   { sheet: 'ui', x: 723,    y: 0, w: 241, h: 380 },
-  card_purple: { sheet: 'ui', x: 964,    y: 0, w: 241, h: 380 },
-  card_red:    { sheet: 'ui', x: 1205,   y: 0, w: 243, h: 380 },
+  card_green:  { sheet: 'ui', x: 0,         y: 0, w: CUW, h: 380 },
+  card_gold:   { sheet: 'ui', x: CUW,       y: 0, w: CUW, h: 380 },
+  card_brown:  { sheet: 'ui', x: CUW * 2,   y: 0, w: CUW, h: 380 },
+  card_blue:   { sheet: 'ui', x: CUW * 3,   y: 0, w: CUW, h: 380 },
+  card_purple: { sheet: 'ui', x: CUW * 4,   y: 0, w: CUW, h: 380 },
+  card_red:    { sheet: 'ui', x: CUW * 5,   y: 0, w: 243, h: 380 },
 }
 
-// Plant key → card frame mapping
 export const PLANT_CARDS = {
-  sunflower:   'card_gold',
-  peashooter:  'card_green',
-  wallnut:     'card_brown',
+  sunflower:  'card_gold',
+  peashooter: 'card_green',
+  wallnut:    'card_brown',
 }

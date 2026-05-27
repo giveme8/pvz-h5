@@ -1,5 +1,4 @@
 import { CONFIG } from '../../config.js'
-import { FRAMES } from '../../assets/AssetKeys.js'
 
 export class BaseZombie {
   constructor(scene, row, zombieConfig) {
@@ -18,10 +17,10 @@ export class BaseZombie {
     this.x = CONFIG.WIDTH + 40
     this.y = y
 
-    const frame = FRAMES[zombieConfig.key]
-    this.body = scene.add.image(this.x, this.y, frame.sheet, zombieConfig.key)
+    this.body = scene.add.image(this.x, this.y, zombieConfig.key)
       .setDisplaySize(48, 72)
       .setOrigin(0.5)
+      .setFlipX(true)
 
     this.hpBar = scene.add.graphics()
     this.drawHpBar()

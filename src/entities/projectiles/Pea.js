@@ -1,5 +1,4 @@
 import { CONFIG } from '../../config.js'
-import { FRAMES } from '../../assets/AssetKeys.js'
 
 export class Pea {
   constructor(scene, x, y, row, damage, speed) {
@@ -9,7 +8,7 @@ export class Pea {
     this.speed = speed
     this.isDead = false
 
-    this.body = scene.add.image(x, y, FRAMES.pea.sheet, 'pea')
+    this.body = scene.add.image(x, y, 'pea')
       .setDisplaySize(22, 22)
       .setOrigin(0.5)
   }

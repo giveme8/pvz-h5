@@ -1,5 +1,4 @@
 import { CONFIG } from '../../config.js'
-import { FRAMES } from '../../assets/AssetKeys.js'
 
 export class BasePlant {
   constructor(scene, row, col, plantConfig) {
@@ -15,8 +14,7 @@ export class BasePlant {
     this.x = x
     this.y = y
 
-    const frame = FRAMES[plantConfig.key]
-    this.body = scene.add.image(x, y, frame.sheet, plantConfig.key)
+    this.body = scene.add.image(x, y, plantConfig.key)
       .setDisplaySize(CONFIG.GRID.CELL_SIZE - 4, CONFIG.GRID.CELL_SIZE - 4)
       .setOrigin(0.5)
 

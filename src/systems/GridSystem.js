@@ -1,9 +1,8 @@
 import { CONFIG } from '../config.js'
-import { SHEETS } from '../assets/AssetKeys.js'
 
 const { GRID } = CONFIG
 
-// Terrain tile keys: alternate grass/flower by checkerboard pattern
+// Alternate grass/flower by checkerboard — these keys are loaded as individual images
 const TILE_KEYS = ['tile_grass', 'tile_flower']
 
 export class GridSystem {
@@ -55,18 +54,17 @@ export class GridSystem {
   }
 
   drawGrid() {
-    const hasTerrain = this.scene.textures.exists(SHEETS.TERRAIN)
+    const hasTerrain = this.scene.textures.exists('tile_grass')
     for (let row = 0; row < GRID.ROWS; row++) {
       for (let col = 0; col < GRID.COLS; col++) {
         const x = GRID.OFFSET_X + col * GRID.CELL_SIZE + GRID.CELL_SIZE / 2
         const y = GRID.OFFSET_Y + row * GRID.CELL_SIZE + GRID.CELL_SIZE / 2
         if (hasTerrain) {
-          const frameKey = TILE_KEYS[(row + col) % 2]
-          const tile = this.scene.add.image(x, y, SHEETS.TERRAIN, frameKey)
+          const tileKey = TILE_KEYS[(row + col) % 2]
+          const tile = this.scene.add.image(x, y, tileKey)
           tile.setDisplaySize(GRID.CELL_SIZE, GRID.CELL_SIZE)
           this.tileSprites.push(tile)
         } else {
-          // fallback color tiles
           if (!this.graphics) this.graphics = this.scene.add.graphics()
           const color = (row + col) % 2 === 0 ? CONFIG.COLORS.GRID_EVEN : CONFIG.COLORS.GRID_ODD
           this.graphics.fillStyle(color, 1)
