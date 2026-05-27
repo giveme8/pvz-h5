@@ -10,8 +10,8 @@ const game = new Phaser.Game({
   type: Phaser.AUTO,
   width: CONFIG.WIDTH,
   height: CONFIG.HEIGHT,
-  backgroundColor: '#1a1a2e',
-  parent: document.body,
+  backgroundColor: '#2d5a1b',
+  parent: 'game-container',
   scene: [PreloadScene, MenuScene, GameScene, UIScene, GameOverScene],
   physics: {
     default: 'arcade',

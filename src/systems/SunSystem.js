@@ -1,3 +1,4 @@
+import Phaser from 'phaser'
 import { CONFIG } from '../config.js'
 
 export class SunSystem {
@@ -21,11 +22,15 @@ export class SunSystem {
   }
 
   spawnSunAt(x, y, amount) {
-    const g = this.scene.add.graphics()
-    g.fillStyle(CONFIG.COLORS.SUN_COLOR, 1)
-    g.fillCircle(0, 0, 18)
-    g.x = x
-    g.y = y
+    const hasSunSprite = this.scene.textures.exists('sun_orb')
+    let g
+    if (hasSunSprite) {
+      g = this.scene.add.image(x, y, 'sun_orb').setDisplaySize(48, 48).setOrigin(0.5)
+    } else {
+      const inner = this.scene.add.graphics().fillStyle(0xFFD700, 1).fillCircle(0, 0, 22)
+      const outer = this.scene.add.graphics().fillStyle(0xFFA500, 0.4).fillCircle(0, 0, 28)
+      g = this.scene.add.container(x, y, [outer, inner])
+    }
 
     const targetY = Phaser.Math.Between(CONFIG.GRID.OFFSET_Y, CONFIG.HEIGHT - 60)
     this.scene.tweens.add({
@@ -34,18 +39,19 @@ export class SunSystem {
       duration: 2000,
       ease: 'Quad.easeOut',
       onComplete: () => {
-        // 使用 zone 让玩家点击收集
-        const zone = this.scene.add.zone(g.x, g.y, 40, 40).setInteractive()
+        const zone = this.scene.add.zone(g.x, g.y, 48, 48).setInteractive()
         zone.on('pointerdown', () => {
-          const fx = g.x
-          const fy = g.y
+          const fx = g.x, fy = g.y
           this.collect(amount)
-          g.destroy()
           zone.destroy()
-          // 飘字提示（坐标在 destroy 前已保存）
+          this.scene.tweens.add({
+            targets: g,
+            scaleX: 1.5, scaleY: 1.5, alpha: 0,
+            duration: 280,
+            onComplete: () => { if (g.active) g.destroy() },
+          })
           this.showFloatText(fx, fy, `+${amount}`)
         })
-        // 10秒后自动消失（guard 防止已被点击后重复 destroy）
         this.scene.time.delayedCall(10000, () => {
           if (g.active) g.destroy()
           if (zone.active) zone.destroy()

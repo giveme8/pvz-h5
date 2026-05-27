@@ -54,21 +54,37 @@ export class GridSystem {
   }
 
   drawGrid() {
-    const hasTerrain = this.scene.textures.exists('tile_grass')
-    for (let row = 0; row < GRID.ROWS; row++) {
-      for (let col = 0; col < GRID.COLS; col++) {
-        const x = GRID.OFFSET_X + col * GRID.CELL_SIZE + GRID.CELL_SIZE / 2
-        const y = GRID.OFFSET_Y + row * GRID.CELL_SIZE + GRID.CELL_SIZE / 2
-        if (hasTerrain) {
-          const tileKey = TILE_KEYS[(row + col) % 2]
-          const tile = this.scene.add.image(x, y, tileKey)
-          tile.setDisplaySize(GRID.CELL_SIZE, GRID.CELL_SIZE)
-          this.tileSprites.push(tile)
-        } else {
-          if (!this.graphics) this.graphics = this.scene.add.graphics()
+    const cs = GRID.CELL_SIZE
+    const gridW = GRID.COLS * cs
+    const gridH = GRID.ROWS * cs
+    const gx = GRID.OFFSET_X
+    const gy = GRID.OFFSET_Y
+
+    if (this.scene.textures.exists('tile_grass')) {
+      // Single tileSprite covers entire grid — no gaps
+      this.scene.add.tileSprite(gx + gridW / 2, gy + gridH / 2, gridW, gridH, 'tile_grass')
+
+      // Checkerboard overlay: semi-transparent flower tiles on even cells
+      if (this.scene.textures.exists('tile_flower')) {
+        for (let row = 0; row < GRID.ROWS; row++) {
+          for (let col = 0; col < GRID.COLS; col++) {
+            if ((row + col) % 2 === 0) continue  // skip odd cells (grass base)
+            const x = gx + col * cs + cs / 2
+            const y = gy + row * cs + cs / 2
+            const overlay = this.scene.add.image(x, y, 'tile_flower')
+            overlay.setDisplaySize(cs, cs).setAlpha(0.85)
+            this.tileSprites.push(overlay)
+          }
+        }
+      }
+    } else {
+      // Fallback: solid color checkerboard
+      const bg = this.scene.add.graphics()
+      for (let row = 0; row < GRID.ROWS; row++) {
+        for (let col = 0; col < GRID.COLS; col++) {
           const color = (row + col) % 2 === 0 ? CONFIG.COLORS.GRID_EVEN : CONFIG.COLORS.GRID_ODD
-          this.graphics.fillStyle(color, 1)
-          this.graphics.fillRect(x - GRID.CELL_SIZE / 2, y - GRID.CELL_SIZE / 2, GRID.CELL_SIZE - 1, GRID.CELL_SIZE - 1)
+          bg.fillStyle(color, 1)
+          bg.fillRect(gx + col * cs, gy + row * cs, cs, cs)
         }
       }
     }

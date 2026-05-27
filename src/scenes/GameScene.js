@@ -45,6 +45,17 @@ export class GameScene extends Phaser.Scene {
       CONFIG.COLORS.BG
     )
 
+    // 网格外框（深色石头边框）
+    const gx = CONFIG.GRID.OFFSET_X
+    const gy = CONFIG.GRID.OFFSET_Y
+    const gw = CONFIG.GRID.COLS * CONFIG.GRID.CELL_SIZE
+    const gh = CONFIG.GRID.ROWS * CONFIG.GRID.CELL_SIZE
+    const border = this.add.graphics()
+    border.fillStyle(0x3B2A1A, 1)
+    border.fillRect(gx - 8, gy - 8, gw + 16, gh + 16)
+    border.fillStyle(0x5A3E2B, 1)
+    border.fillRect(gx - 4, gy - 4, gw + 8, gh + 8)
+
     // 系统初始化
     this.gridSystem = new GridSystem(this)
     this.sunSystem = new SunSystem(this)

@@ -1,16 +1,18 @@
 // 游戏常量配置 - 单一数据源
 export const CONFIG = {
-  // 画布尺寸
-  WIDTH: 900,
-  HEIGHT: 600,
+  // 画布尺寸 — 参考目标图匹配
+  WIDTH: 960,
+  HEIGHT: 640,
 
   // 网格系统 (5行 × 9列)
+  // 布局: 120px左栏 + 9×80=720px网格 + 120px右装饰 = 960
+  //       52px顶HUD + 5×80=400px网格 + 188px底装饰 = 640
   GRID: {
     ROWS: 5,
     COLS: 9,
     CELL_SIZE: 80,
-    OFFSET_X: 120,  // 左侧预留给植物选择栏
-    OFFSET_Y: 80,   // 顶部预留给HUD
+    OFFSET_X: 120,  // 左侧植物选择栏宽度
+    OFFSET_Y: 52,   // 顶部 HUD 高度（精简）
   },
 
   // 阳光系统
@@ -81,15 +83,18 @@ export const CONFIG = {
     { delay: 60000, zombies: [{ type: 'NORMAL', count: 4, interval: 1500 }, { type: 'CONE', count: 2, interval: 2000 }] },
   ],
 
-  // 颜色主题
+  // 颜色主题 — 对标参考图深草绿配色
   COLORS: {
-    BG: 0x5C8A3C,
-    GRID_EVEN: 0x6AA346,
-    GRID_ODD: 0x5C9E3A,
+    BG: 0x3a7a1e,
+    BODY_BG: '#2d5a1b',  // HTML body 背景色
+    GRID_EVEN: 0x5a9a2e,
+    GRID_ODD: 0x4a8820,
     GRID_HOVER: 0x88CC55,
-    UI_BG: 0x2C4A1E,
+    UI_BG: 0x1a4a0a,
+    SIDEBAR_BG: 0x1a3a0a,
     SUN_COLOR: 0xFFD700,
     HP_RED: 0xFF4444,
     HP_GREEN: 0x44FF44,
+    CARD_BORDER: 0xd4a017,  // 金色卡片边框
   },
 }

@@ -39,6 +39,7 @@ export class PreloadScene extends Phaser.Scene {
         uiTex.add(name, 0, f.x, f.y, f.w, f.h)
       }
     }
+    console.log('sun_orb loaded:', this.textures.exists('sun_orb'))
     this.scene.start('MenuScene')
   }
 }

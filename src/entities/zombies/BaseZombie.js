@@ -18,7 +18,7 @@ export class BaseZombie {
     this.y = y
 
     this.body = scene.add.image(this.x, this.y, zombieConfig.key)
-      .setDisplaySize(48, 72)
+      .setDisplaySize(70, 80)
       .setOrigin(0.5)
       .setFlipX(true)
 
