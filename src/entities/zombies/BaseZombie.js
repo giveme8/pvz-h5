@@ -1,4 +1,5 @@
 import { CONFIG } from '../../config.js'
+import { FRAMES } from '../../assets/AssetKeys.js'
 
 export class BaseZombie {
   constructor(scene, row, zombieConfig) {
@@ -17,21 +18,15 @@ export class BaseZombie {
     this.x = CONFIG.WIDTH + 40
     this.y = y
 
-    // 主体图形（色块占位）
-    this.body = scene.add.graphics()
-    this.drawBody()
+    const frame = FRAMES[zombieConfig.key]
+    this.body = scene.add.image(this.x, this.y, frame.sheet, zombieConfig.key)
+      .setDisplaySize(48, 72)
+      .setOrigin(0.5)
 
     this.hpBar = scene.add.graphics()
     this.drawHpBar()
-  }
 
-  drawBody() {
-    this.body.clear()
-    this.body.fillStyle(this.config.color, 1)
-    this.body.fillRect(this.x - 20, this.y - 28, 40, 56)
-    // 头
-    this.body.fillStyle(this.config.color, 0.8)
-    this.body.fillCircle(this.x, this.y - 36, 16)
+    scene.events.emit('zombieSpawned', this)
   }
 
   drawHpBar() {
@@ -76,10 +71,7 @@ export class BaseZombie {
       }
     }
 
-    // 同步图形位置
-    this.body.x = 0
-    this.body.y = 0
-    this.drawBody()
+    this.body.setPosition(this.x, this.y)
     this.drawHpBar()
   }
 

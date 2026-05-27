@@ -8,6 +8,7 @@ import { Peashooter } from '../entities/plants/Peashooter.js'
 import { Wallnut } from '../entities/plants/Wallnut.js'
 import { NormalZombie } from '../entities/zombies/NormalZombie.js'
 import { ConeZombie } from '../entities/zombies/ConeZombie.js'
+import { TypingSystem } from '../systems/TypingSystem.js'
 
 const PLANT_MAP = {
   sunflower: Sunflower,
@@ -48,6 +49,8 @@ export class GameScene extends Phaser.Scene {
     this.gridSystem = new GridSystem(this)
     this.sunSystem = new SunSystem(this)
     this.waveSystem = new WaveSystem(this)
+    if (this.typingSystem) this.typingSystem.destroy()
+    this.typingSystem = new TypingSystem(this)
 
     // 事件绑定（先 off 再 on，防止重玩时重复绑定）
     this.events.off('spawnZombie').on('spawnZombie', ({ type, row }) => this.spawnZombie(type, row))
@@ -113,6 +116,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    this.typingSystem.update()
+
     // 更新植物
     for (const plant of this.plants) {
       if (!plant.isDead) plant.update(time, delta)

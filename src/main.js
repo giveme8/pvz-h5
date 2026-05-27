@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { CONFIG } from './config.js'
+import { PreloadScene } from './scenes/PreloadScene.js'
 import { MenuScene } from './scenes/MenuScene.js'
 import { GameScene } from './scenes/GameScene.js'
 import { UIScene } from './scenes/UIScene.js'
@@ -11,7 +12,7 @@ const game = new Phaser.Game({
   height: CONFIG.HEIGHT,
   backgroundColor: '#1a1a2e',
   parent: document.body,
-  scene: [MenuScene, GameScene, UIScene, GameOverScene],
+  scene: [PreloadScene, MenuScene, GameScene, UIScene, GameOverScene],
   physics: {
     default: 'arcade',
     arcade: { debug: false },

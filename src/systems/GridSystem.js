@@ -1,13 +1,16 @@
 import { CONFIG } from '../config.js'
+import { SHEETS } from '../assets/AssetKeys.js'
 
 const { GRID } = CONFIG
+
+// Terrain tile keys: alternate grass/flower by checkerboard pattern
+const TILE_KEYS = ['tile_grass', 'tile_flower']
 
 export class GridSystem {
   constructor(scene) {
     this.scene = scene
-    // grid[row][col] = plantInstance | null
     this.grid = Array.from({ length: GRID.ROWS }, () => Array(GRID.COLS).fill(null))
-    this.graphics = scene.add.graphics()
+    this.tileSprites = []
     this.hoverGraphics = scene.add.graphics()
     this.drawGrid()
   }
@@ -52,17 +55,23 @@ export class GridSystem {
   }
 
   drawGrid() {
-    this.graphics.clear()
+    const hasTerrain = this.scene.textures.exists(SHEETS.TERRAIN)
     for (let row = 0; row < GRID.ROWS; row++) {
       for (let col = 0; col < GRID.COLS; col++) {
-        const color = (row + col) % 2 === 0 ? CONFIG.COLORS.GRID_EVEN : CONFIG.COLORS.GRID_ODD
-        this.graphics.fillStyle(color, 1)
-        this.graphics.fillRect(
-          GRID.OFFSET_X + col * GRID.CELL_SIZE,
-          GRID.OFFSET_Y + row * GRID.CELL_SIZE,
-          GRID.CELL_SIZE - 1,
-          GRID.CELL_SIZE - 1
-        )
+        const x = GRID.OFFSET_X + col * GRID.CELL_SIZE + GRID.CELL_SIZE / 2
+        const y = GRID.OFFSET_Y + row * GRID.CELL_SIZE + GRID.CELL_SIZE / 2
+        if (hasTerrain) {
+          const frameKey = TILE_KEYS[(row + col) % 2]
+          const tile = this.scene.add.image(x, y, SHEETS.TERRAIN, frameKey)
+          tile.setDisplaySize(GRID.CELL_SIZE, GRID.CELL_SIZE)
+          this.tileSprites.push(tile)
+        } else {
+          // fallback color tiles
+          if (!this.graphics) this.graphics = this.scene.add.graphics()
+          const color = (row + col) % 2 === 0 ? CONFIG.COLORS.GRID_EVEN : CONFIG.COLORS.GRID_ODD
+          this.graphics.fillStyle(color, 1)
+          this.graphics.fillRect(x - GRID.CELL_SIZE / 2, y - GRID.CELL_SIZE / 2, GRID.CELL_SIZE - 1, GRID.CELL_SIZE - 1)
+        }
       }
     }
   }

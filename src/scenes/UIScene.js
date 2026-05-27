@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { CONFIG } from '../config.js'
+import { SHEETS, FRAMES, PLANT_CARDS } from '../assets/AssetKeys.js'
 
 export class UIScene extends Phaser.Scene {
   constructor() {
@@ -33,18 +34,36 @@ export class UIScene extends Phaser.Scene {
     this.add.rectangle(60, CONFIG.HEIGHT / 2, 110, CONFIG.HEIGHT, CONFIG.COLORS.UI_BG)
 
     const plantList = [
-      { key: 'sunflower', label: '向日葵\n50☀', color: CONFIG.PLANTS.SUNFLOWER.color },
-      { key: 'peashooter', label: '豌豆射手\n100☀', color: CONFIG.PLANTS.PEASHOOTER.color },
-      { key: 'wallnut', label: '坚果墙\n50☀', color: CONFIG.PLANTS.WALLNUT.color },
+      { key: 'sunflower',   label: '向日葵\n50☀',   cost: 50,  color: CONFIG.PLANTS.SUNFLOWER.color,   cardFrame: PLANT_CARDS.sunflower },
+      { key: 'peashooter',  label: '豌豆射手\n100☀', cost: 100, color: CONFIG.PLANTS.PEASHOOTER.color,  cardFrame: PLANT_CARDS.peashooter },
+      { key: 'wallnut',     label: '坚果墙\n50☀',   cost: 50,  color: CONFIG.PLANTS.WALLNUT.color,     cardFrame: PLANT_CARDS.wallnut },
     ]
+    const hasUI = this.textures.exists(SHEETS.UI)
+    const hasChars = this.textures.exists(SHEETS.CHARACTERS)
 
     this.plantButtons = []
     plantList.forEach((p, i) => {
       const btnY = 110 + i * 110
-      const bg = this.add.rectangle(60, btnY, 90, 90, p.color).setInteractive()
-      this.add.text(60, btnY + 8, p.label, {
-        fontSize: '11px',
-        fill: '#fff',
+
+      let bg
+      if (hasUI) {
+        // Use sprite card frame as button background
+        bg = this.add.image(60, btnY, SHEETS.UI, p.cardFrame)
+          .setDisplaySize(90, 100)
+          .setInteractive()
+        // Show plant sprite on the card
+        if (hasChars) {
+          this.add.image(60, btnY - 10, SHEETS.CHARACTERS, p.key)
+            .setDisplaySize(52, 52)
+        }
+      } else {
+        bg = this.add.rectangle(60, btnY, 90, 90, p.color).setInteractive()
+      }
+
+      // Cost label
+      this.add.text(60, btnY + 30, `${p.cost}☀`, {
+        fontSize: '12px',
+        fill: '#FFD700',
         stroke: '#000',
         strokeThickness: 2,
         align: 'center',
@@ -54,10 +73,12 @@ export class UIScene extends Phaser.Scene {
         gameScene.selectedPlant = p.key
         this.highlightSelected(i)
       })
-      bg.on('pointerover', () => bg.setFillStyle(Phaser.Display.Color.ValueToColor(p.color).lighten(20).color))
-      bg.on('pointerout', () => bg.setFillStyle(i === this._selectedIndex ? 0xFFFFFF : p.color))
+      if (!hasUI) {
+        bg.on('pointerover', () => bg.setFillStyle(Phaser.Display.Color.ValueToColor(p.color).lighten(20).color))
+        bg.on('pointerout', () => bg.setFillStyle(i === this._selectedIndex ? 0xFFFFFF : p.color))
+      }
 
-      this.plantButtons.push({ bg, color: p.color })
+      this.plantButtons.push({ bg, color: p.color, hasUI })
     })
 
     this._selectedIndex = -1
@@ -98,11 +119,15 @@ export class UIScene extends Phaser.Scene {
   highlightSelected(index) {
     this._selectedIndex = index
     this.plantButtons.forEach((btn, i) => {
-      btn.bg.setFillStyle(i === index ? 0xFFFFFF : btn.color)
+      if (!btn.hasUI) btn.bg.setFillStyle(i === index ? 0xFFFFFF : btn.color)
+      btn.bg.setAlpha(i === index ? 0.7 : 1)
     })
   }
 
   clearHighlight() {
-    this.plantButtons.forEach(btn => btn.bg.setFillStyle(btn.color))
+    this.plantButtons.forEach(btn => {
+      if (!btn.hasUI) btn.bg.setFillStyle(btn.color)
+      btn.bg.setAlpha(1)
+    })
   }
 }

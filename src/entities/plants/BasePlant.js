@@ -1,4 +1,5 @@
 import { CONFIG } from '../../config.js'
+import { FRAMES } from '../../assets/AssetKeys.js'
 
 export class BasePlant {
   constructor(scene, row, col, plantConfig) {
@@ -14,30 +15,21 @@ export class BasePlant {
     this.x = x
     this.y = y
 
-    // 主体图形（色块占位，前端-小张后续替换为精灵图）
-    this.body = scene.add.graphics()
-    this.drawBody()
+    const frame = FRAMES[plantConfig.key]
+    this.body = scene.add.image(x, y, frame.sheet, plantConfig.key)
+      .setDisplaySize(CONFIG.GRID.CELL_SIZE - 4, CONFIG.GRID.CELL_SIZE - 4)
+      .setOrigin(0.5)
 
-    // 血条
     this.hpBar = scene.add.graphics()
     this.drawHpBar()
-  }
-
-  drawBody() {
-    const s = CONFIG.GRID.CELL_SIZE
-    this.body.clear()
-    this.body.fillStyle(this.config.color, 1)
-    this.body.fillRoundedRect(this.x - s / 2 + 4, this.y - s / 2 + 4, s - 8, s - 8, 8)
   }
 
   drawHpBar() {
     const ratio = this.hp / this.maxHp
     const w = CONFIG.GRID.CELL_SIZE - 12
     this.hpBar.clear()
-    // 背景
     this.hpBar.fillStyle(0x333333, 1)
     this.hpBar.fillRect(this.x - w / 2, this.y + 32, w, 5)
-    // 血量
     const color = ratio > 0.5 ? CONFIG.COLORS.HP_GREEN : ratio > 0.25 ? 0xFFAA00 : CONFIG.COLORS.HP_RED
     this.hpBar.fillStyle(color, 1)
     this.hpBar.fillRect(this.x - w / 2, this.y + 32, w * ratio, 5)
