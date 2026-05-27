@@ -60,34 +60,22 @@ export class GridSystem {
     const gx = GRID.OFFSET_X
     const gy = GRID.OFFSET_Y
 
-    if (this.scene.textures.exists('tile_grass')) {
-      // tileSprite covers entire grid; scale tiles to cell size (texture is ~362px raw)
-      const ts = this.scene.add.tileSprite(gx + gridW / 2, gy + gridH / 2, gridW, gridH, 'tile_grass')
-      const grassFrame = this.scene.textures.getFrame('tile_grass')
-      const texW = grassFrame ? grassFrame.realWidth : 362
-      ts.setTileScale(cs / texW, cs / texW)
+    // Grass-green background to cover any sub-pixel gaps
+    const bg = this.scene.add.graphics()
+    bg.fillStyle(0x5f8f36, 1)
+    bg.fillRect(gx, gy, gridW, gridH)
 
-      // Checkerboard overlay: semi-transparent flower tiles on alternating cells
-      if (this.scene.textures.exists('tile_flower')) {
-        for (let row = 0; row < GRID.ROWS; row++) {
-          for (let col = 0; col < GRID.COLS; col++) {
-            if ((row + col) % 2 === 0) continue
-            const x = gx + col * cs + cs / 2
-            const y = gy + row * cs + cs / 2
-            const overlay = this.scene.add.image(x, y, 'tile_flower')
-            overlay.setDisplaySize(cs, cs).setAlpha(0.85)
-            this.tileSprites.push(overlay)
-          }
-        }
-      }
-    } else {
-      // Fallback: solid color checkerboard
-      const bg = this.scene.add.graphics()
+    if (this.scene.textures.exists('tile_grass')) {
+      const hasFlower = this.scene.textures.exists('tile_flower')
       for (let row = 0; row < GRID.ROWS; row++) {
         for (let col = 0; col < GRID.COLS; col++) {
-          const color = (row + col) % 2 === 0 ? CONFIG.COLORS.GRID_EVEN : CONFIG.COLORS.GRID_ODD
-          bg.fillStyle(color, 1)
-          bg.fillRect(gx + col * cs, gy + row * cs, cs, cs)
+          const x = gx + col * cs
+          const y = gy + row * cs
+          const key = (hasFlower && (row + col) % 2 !== 0) ? 'tile_flower' : 'tile_grass'
+          const tile = this.scene.add.image(x, y, key)
+            .setDisplaySize(cs + 2, cs + 2)  // +2 closes float seams
+            .setOrigin(0, 0)
+          this.tileSprites.push(tile)
         }
       }
     }
