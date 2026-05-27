@@ -61,14 +61,17 @@ export class GridSystem {
     const gy = GRID.OFFSET_Y
 
     if (this.scene.textures.exists('tile_grass')) {
-      // Single tileSprite covers entire grid — no gaps
-      this.scene.add.tileSprite(gx + gridW / 2, gy + gridH / 2, gridW, gridH, 'tile_grass')
+      // tileSprite covers entire grid; scale tiles to cell size (texture is ~362px raw)
+      const ts = this.scene.add.tileSprite(gx + gridW / 2, gy + gridH / 2, gridW, gridH, 'tile_grass')
+      const grassFrame = this.scene.textures.getFrame('tile_grass')
+      const texW = grassFrame ? grassFrame.realWidth : 362
+      ts.setTileScale(cs / texW, cs / texW)
 
-      // Checkerboard overlay: semi-transparent flower tiles on even cells
+      // Checkerboard overlay: semi-transparent flower tiles on alternating cells
       if (this.scene.textures.exists('tile_flower')) {
         for (let row = 0; row < GRID.ROWS; row++) {
           for (let col = 0; col < GRID.COLS; col++) {
-            if ((row + col) % 2 === 0) continue  // skip odd cells (grass base)
+            if ((row + col) % 2 === 0) continue
             const x = gx + col * cs + cs / 2
             const y = gy + row * cs + cs / 2
             const overlay = this.scene.add.image(x, y, 'tile_flower')
