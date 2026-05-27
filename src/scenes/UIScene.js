@@ -4,8 +4,8 @@ import { SHEETS, FRAMES, PLANT_CARDS, SPRITES } from '../assets/AssetKeys.js'
 
 const W = CONFIG.WIDTH
 const H = CONFIG.HEIGHT
-const HUD_H = CONFIG.GRID.OFFSET_Y   // 52px
-const PANEL_W = CONFIG.GRID.OFFSET_X  // 120px
+const HUD_H = CONFIG.GRID.HUD_H       // 72px
+const PANEL_W = CONFIG.GRID.SIDEBAR_W // 200px
 const CARD_W = 108
 const CARD_H = 138
 
@@ -150,9 +150,9 @@ export class UIScene extends Phaser.Scene {
     this.plantButtons.forEach((btn, i) => {
       const canAfford = sun >= btn.cost
       const isSelected = i === this._selectedIndex
-      const alpha = isSelected ? 0.7 : canAfford ? 1 : 0.4
+      const alpha = isSelected ? 0.7 : canAfford ? 1 : 0.55
       if (btn.bg) btn.bg.setAlpha(alpha)
-      if (btn.sprite) btn.sprite.setAlpha(canAfford ? 1 : 0.35)
+      if (btn.sprite) btn.sprite.setAlpha(canAfford ? 1 : 0.55)
     })
   }
 
@@ -161,7 +161,7 @@ export class UIScene extends Phaser.Scene {
     this.plantButtons.forEach((btn, i) => {
       if (!btn.hasUI) btn.bg.setFillStyle(i === index ? 0x88FF44 : 0xEED9A0)
       const canAfford = this.scene.get('GameScene').sunSystem.sun >= btn.cost
-      btn.bg.setAlpha(i === index ? 0.7 : canAfford ? 1 : 0.4)
+      btn.bg.setAlpha(i === index ? 0.7 : canAfford ? 1 : 0.55)
     })
   }
 
@@ -170,8 +170,8 @@ export class UIScene extends Phaser.Scene {
     this.plantButtons.forEach((btn) => {
       if (!btn.hasUI) btn.bg.setFillStyle(0xEED9A0)
       const canAfford = sun >= btn.cost
-      btn.bg.setAlpha(canAfford ? 1 : 0.4)
-      if (btn.sprite) btn.sprite.setAlpha(canAfford ? 1 : 0.35)
+      btn.bg.setAlpha(canAfford ? 1 : 0.55)
+      if (btn.sprite) btn.sprite.setAlpha(canAfford ? 1 : 0.55)
     })
   }
 }

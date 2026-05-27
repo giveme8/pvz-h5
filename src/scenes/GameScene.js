@@ -61,7 +61,7 @@ export class GameScene extends Phaser.Scene {
     this.sunSystem = new SunSystem(this)
     this.waveSystem = new WaveSystem(this)
     if (this.typingSystem) this.typingSystem.destroy()
-    this.typingSystem = new TypingSystem(this)
+    this.typingSystem = CONFIG.TYPING_ENABLED ? new TypingSystem(this) : null
 
     // 事件绑定（先 off 再 on，防止重玩时重复绑定）
     this.events.off('spawnZombie').on('spawnZombie', ({ type, row }) => this.spawnZombie(type, row))
@@ -127,7 +127,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.typingSystem.update()
+    if (this.typingSystem) this.typingSystem.update()
 
     // 更新植物
     for (const plant of this.plants) {

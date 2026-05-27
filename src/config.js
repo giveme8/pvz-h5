@@ -1,19 +1,24 @@
 // 游戏常量配置 - 单一数据源
 export const CONFIG = {
   // 画布尺寸 — 参考目标图匹配
-  WIDTH: 1024,
+  WIDTH: 1136,
   HEIGHT: 640,
 
   // 网格系统 (5行 × 9列)
-  // 布局: 120px左栏 + 9×96=864px网格 + 40px右装饰 = 1024
-  //       52px顶HUD + 5×96=480px网格 + 108px底装饰 = 640
+  // 布局: 200px侧栏 + 32px间距 + 9×96=864px网格 + 40px右装饰 = 1136
+  //       72px顶HUD + 28px间距 + 5×96=480px网格 + 60px底装饰 = 640
   GRID: {
     ROWS: 5,
     COLS: 9,
     CELL_SIZE: 96,
-    OFFSET_X: 120,  // 左侧植物选择栏宽度
-    OFFSET_Y: 52,   // 顶部 HUD 高度（精简）
+    OFFSET_X: 232,   // sidebarWidth(200) + buffer(32)
+    OFFSET_Y: 100,   // HUD_H(72) + lower(28)
+    SIDEBAR_W: 200,  // 左侧植物选择栏宽度
+    HUD_H: 72,       // 顶部 HUD 高度
   },
+
+  // 功能开关
+  TYPING_ENABLED: false,  // 打字攻击模式（MVP 默认关闭）
 
   // 阳光系统
   SUN: {
